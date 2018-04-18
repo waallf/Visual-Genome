@@ -1,0 +1,17 @@
+论文：arXiv:1602.07332v1
+
+阅读：必须在现有的数据集上加3个主要成分，才能更好的让计算机理解图像
+    1.a grounding of visual concepts to language ，为图像上物体添加了详细的属性与描述
+    2.完整的描述以及QA
+    3.图像中物体之间的联系
+    
+    Visual Genome Data包含7个主要成分：
+    region descriptions, 
+    objects, 
+    attributes, 
+    relationships,
+    region graphs, 
+    scene graphs,
+    questionanswer
+    
+    Visual Genome Data API: https://visualgenome.org
