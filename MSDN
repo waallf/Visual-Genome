@@ -1,0 +1,95 @@
+论文：
+Scene Graph Generation from Objects, Phrases and Region Captions
+产生场景图，将物体检测，场景图产生，ImageCaption一块产生。
+将三个任务结合起来主要是要利用他们的空间与语义相关的视觉特征。
+本方法的三个贡献：
+  1.提出了一个较新的方法去将三个任务结合到一起
+  2.建立一个图去对其物体、短语以及caption
+  3.refine精调结构，通过三个任务来相互补充互相提高
+ 
+处理过程：
+  1.Region proposal :对物体,短语，区域标签产生ROIS
+  2.特征特殊化：将ROI中的特征特殊化
+  3.动态图建立：根据相应ROI的语义和空间关系，动态构建图形以模拟不同分支的特征节点之间的连接
+  4.精调：通过在不同的任务之间加入精调结构
+  5.最终预测：使用精调结构后的特征去分类物体，预测和产生captions
+ 
+ 具体过程：
+  Region Proposal
+    1.Region Proposal 
+      object region proposals:直接使用RPN网络提取
+    2.phrase region proposals:将N个物体产生N(N-1)个连接
+    3.caption region proposals:直接由另一个训练的RPN网络产生
+    物体检测与caption region proposal 的RPNS共享一个VGG-16，anchors由聚类算法，宽度与高度由k-menas聚类算法产生，为了减少框的数量，使用了非极大值抑制
+    
+  Feature Specialization：
+    不同的分支对应着不同的任务，所以需要不同的特征
+    1.首先将三种ROIS送进ROIS-pooling
+    2.使用不同的FC层，在本文中使用了两个1024维的全连接层，对于每个分支
+    
+  Dynamic Graph Construction：
+    连接图由语义和ROIS间的空间联系建立
+    短语和物体间的连接在建立短语proposal时已经建立，每个短语proposal连接两个物体
+    短语和caption proposal间的连接是基于他们的空间信息，当一个caption proposal覆盖超过短语proposal0.7时，他们之间用一个无向边连接
+    
+  Feature Refining：
+    精调划分为三个平行的部分 object Refining， phrase refining， caption refining
+    图G，点集E，边集v，对于每个点都有两种连接：subject-predicate and predicate-object <oman-watch-child>
+       我们根据连接类型将短语特征合并到两个集合中，然后使用合并的短语特征来细化object特征
+            Phrase feature merge：不同的短语特征有不同的权重在优化obiect特征时，使用下面的门函数来计算权重
+            
+            Object feature refining:
+            
+              
+    
+    
+    
+  Refining Features of Visual Phrase and Caption：
+    每个短语节点连接两个物体节点，一个subject一个object,<subject - predicate - obiect>
+    每个caption连接多个短语节点，和refine features of object 一样包括合并和精调
+    
+    
+  Scene Graph Generation：
+    使用一个矩阵表示一个场景图，对角线上表示第i个物体，（i,j）表示短语，即i个物体与第j个物体的关系。
+    对于第i个物体，根据其特征，被预测为背景或者物体，同样根据特征将<i,j>短语预测为预先定义好的谓词，或者无关。
+    如果对象i和j没有被分为背景，之间的关系没有被定义为无关，则i,j对象通过谓词连接。
+    
+  Region Caption Generation：
+    使用lstm来产生区域描述，参考文献：
+    J. Johnson, A. Karpathy, and L. Fei-Fei. Densecap: Fully
+    convolutional localization networks for dense captioning.
+    arXiv preprint arXiv:1511.07571, 2015. 2, 5, 7, 8
+    
+    A. Karpathy and L. Fei-Fei. Deep visual-semantic alignments
+    for generating image descriptions. In CVPR, 2015.
+    1, 2, 5
+    
+    Lstm模型主要包括四部分：
+    1.image encoder：将图像特征转换到word features相同作用域
+    2.word wncoder:将one_hot转化为word embedging
+    3.一个两层的lstm网络，这是对图像信息和序列内的时间依赖关系进行编码
+    4.word decoder :它用于解码LSTM的输出特征以便在单词上进行分配
+    
+  DataSets:
+     Visual Genome datasets
+     预处理：
+      我们用不同的时态来标准化单词，然后选择前150个频繁对象类别和前50个谓词类别。
+      将框小于16个像素的去除
+      对caption annotation进行预处理：将所有单词转化为小写，将常用的10000个单词作为字典，其他为unknown
+                                     将区域的边小于32像素的区域去掉，NTLK用于标记句子
+                                     
+      
+      
+     
+
+    
+    
+    
+    
+  
+    
+    
+    
+ 
+  
+  
