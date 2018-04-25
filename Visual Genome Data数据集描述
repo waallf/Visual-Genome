@@ -1,5 +1,5 @@
 论文：arXiv:1602.07332v1
-
+Visual Genome Data : https://visualgenome.org
 阅读：必须在现有的数据集上加3个主要成分，才能更好的让计算机理解图像
     1.a grounding of visual concepts to language ，为图像上物体添加了详细的属性与描述
     2.完整的描述以及QA
@@ -14,4 +14,10 @@
     scene graphs,
     questionanswer
     
-    Visual Genome Data API: https://visualgenome.org
+    
+    108077张图片
+    5.4Million Region Descriptions
+    1.7Million VAQ
+    3.8Million object insatnaces
+    2.8Million Attributes
+    2.3Million Relationships
